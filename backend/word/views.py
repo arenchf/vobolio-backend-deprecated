@@ -2,7 +2,7 @@
 from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.pagination import PageNumberPagination,LimitOffsetPagination
 
 from .models import Category, Word
 from .serializers import CategorySerializer, WordSerializer
@@ -65,18 +65,20 @@ class CategoryDetailView(APIView):
             return Response(status=status.HTTP_404_NOT_FOUND)
 
 
+
+
 class WordView(APIView):
     def get(self,request,*args,**kwargs):
         category = request.GET.get('category', None)
         if category:
-            words = Word.objects.filter(is_visible=True, dictionary=kwargs["pk"], category=category)
+            words = Word.objects.filter(is_visible=True, dictionary=kwargs["pk"], category=category).order_by('-id')
         else:
-            words = Word.objects.filter(is_visible=True, dictionary=kwargs["pk"])
+            words = Word.objects.filter(is_visible=True, dictionary=kwargs["pk"]).order_by('-id')
         
         paginator = LimitOffsetPagination()
         paginator.page_size = 10
         result_page = paginator.paginate_queryset(words, request)
-        serializer = WordSerializer(words, many=True)
+        serializer = WordSerializer(result_page, many=True)
         return paginator.get_paginated_response(serializer.data)
         
 

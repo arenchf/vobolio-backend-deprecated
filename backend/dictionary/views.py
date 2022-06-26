@@ -11,7 +11,7 @@ from .serializers import DictionarySerializer
 class DictionaryView(APIView):
 
     def get(self,request):
-        dictionaries = Dictionary.objects.filter(is_visible=True)
+        dictionaries = Dictionary.objects.filter(is_visible=True,author=request.user)
         serializer = DictionarySerializer(dictionaries,many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
