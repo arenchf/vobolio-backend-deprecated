@@ -1,4 +1,5 @@
 
+from xmlrpc.client import ResponseError
 from rest_framework import status, permissions
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -7,15 +8,17 @@ from .models import Dictionary
 from .serializers import DictionarySerializer
 
 
-
 class DictionaryView(APIView):
 
-    def get(self,request):
-        dictionaries = Dictionary.objects.filter(is_visible=True,author=request.user)
-        serializer = DictionarySerializer(dictionaries,many=True)
+    def get(self, request):
+        dictionaries = Dictionary.objects.filter(
+            is_visible=True, author=request.user)
+        # if not dictionaries:
+        #     return Response({"msg": "test"}, status.HTTP_404_NOT_FOUND)
+        serializer = DictionarySerializer(dictionaries, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-    def post(self,request,*args,**kwargs):
+    def post(self, request, *args, **kwargs):
         data = request.data
         print(request.user)
         data['author'] = request.user.id
@@ -23,8 +26,5 @@ class DictionaryView(APIView):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-    
-
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
