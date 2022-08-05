@@ -1,3 +1,22 @@
 from django.db import models
 
 # Create your models here.
+
+# class Training(models.Model):
+#     word = models.CharField(max_length=256)
+#     translation = models.CharField(max_length=256)
+#     pronunciation = models.CharField(max_length=512, null=True, default=None)
+#     first_extra_field = models.CharField(
+#         max_length=512, null=True, default=None)
+#     second_extra_field = models.CharField(
+#         max_length=512, null=True, default=None)
+#     created_at = models.DateTimeField(auto_now_add=True)
+#     points = models.IntegerField(default=0)
+#     updated_at = models.DateTimeField(auto_now=True)
+#     is_visible = models.BooleanField(default=True)
+#     dictionary = models.ForeignKey(
+#         "dictionary.Dictionary", on_delete=models.CASCADE)
+#     author = models.ForeignKey(
+#         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+#     category = models.ForeignKey(
+#         Category, null=True, on_delete=models.SET_NULL)
