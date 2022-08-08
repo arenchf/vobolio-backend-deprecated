@@ -6,7 +6,10 @@ from rest_framework.pagination import PageNumberPagination, LimitOffsetPaginatio
 from rest_framework.decorators import api_view
 
 from .models import Category, Word
-from .serializers import CategorySerializer, WordSerializer
+from dictionary.models import Dictionary
+from .serializers import CategorySerializer, TrainingSerializer, WordSerializer
+
+import random
 
 
 class CategoryView(APIView):
@@ -71,6 +74,7 @@ class CategoryDetailView(APIView):
 
 class WordView(APIView):
     def get(self, request, *args, **kwargs):
+        print("GETTING", request)
         category = request.GET.get('category', None)
         if category:
             words = Word.objects.filter(
@@ -141,8 +145,30 @@ def train_word(request, *args, **kwargs):
 
     word = Word.objects.get(
         is_visible=True, dictionary=kwargs['pk'], id=kwargs['word_id'])
-    word.train()
 
+    word.train()
     word.save()
 
-    return Response({"message": "testing put!"})
+    serializer = WordSerializer(word)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+@api_view(["GET"])
+def training(request, *args, **kwargs):
+
+    word_count = Word.objects.filter(
+        is_visible=True, dictionary=kwargs['pk']).count() - 1
+
+    random_words = []
+    for _ in range(4):
+        random_int = random.randint(0, word_count)
+        random_word = Word.objects.filter(
+            is_visible=True, dictionary=kwargs['pk']).all()[random_int]
+        random_words.append(random_word)
+
+    data = {}
+
+    data["options_words"] = random_words
+
+    serializer = TrainingSerializer(data)
+    return Response(serializer.data, status=status.HTTP_200_OK)

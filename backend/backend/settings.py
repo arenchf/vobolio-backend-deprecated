@@ -43,8 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'authentication',
     'word',
-    'dictionary',
-    'training'
+    'dictionary'
 ]
 
 MIDDLEWARE = [

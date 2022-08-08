@@ -34,4 +34,4 @@ class Word(models.Model):
         Category, null=True, on_delete=models.SET_NULL)
 
     def train(self):
-        self.points += 1
+        self.points += 5

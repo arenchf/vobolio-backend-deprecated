@@ -5,22 +5,24 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .models import Dictionary
-from .serializers import DictionarySerializer
+from .serializers import DetailedDictionarySerializer, DictionarySerializer
 
 
 class DictionaryView(APIView):
 
-    def get(self, request):
+    def get(self, request, *args, **kwargs):
         dictionaries = Dictionary.objects.filter(
-            is_visible=True, author=request.user)
+            is_visible=True, author=kwargs["user_id"])
         # if not dictionaries:
         #     return Response({"msg": "test"}, status.HTTP_404_NOT_FOUND)
-        serializer = DictionarySerializer(dictionaries, many=True)
+        serializer = DetailedDictionarySerializer(dictionaries, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request, *args, **kwargs):
         data = request.data
-        data['author'] = request.user.id
+
+        data['author'] = kwargs["user_id"]
+
         serializer = DictionarySerializer(data=data)
         if serializer.is_valid():
             serializer.save()

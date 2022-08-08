@@ -18,3 +18,7 @@ class WordSerializer(serializers.ModelSerializer):
             'id': {'read_only': True},
             'points': {'read_only': True}
         }
+
+
+class TrainingSerializer(serializers.Serializer):
+    options_words = WordSerializer(read_only=True, many=True)

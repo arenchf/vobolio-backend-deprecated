@@ -1,6 +1,6 @@
 from django import views
 from django.urls import path
-from .views import CategoryView, WordView, CategoryDetailView, WordDetailView, train_word
+from .views import CategoryView, WordView, CategoryDetailView, WordDetailView, train_word, training
 
 
 urlpatterns = [
@@ -12,5 +12,7 @@ urlpatterns = [
     path('dictionaries/<int:pk>/words/<int:word_id>/',
          WordDetailView.as_view(), name="words"),
     path('dictionaries/<int:pk>/words/<int:word_id>/train/',
-         train_word, name="train")
+         train_word, name="train"),
+    path('dictionaries/<int:pk>/training/',
+         training, name="training")
 ]
