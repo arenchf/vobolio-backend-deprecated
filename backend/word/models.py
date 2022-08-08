@@ -34,4 +34,7 @@ class Word(models.Model):
         Category, null=True, on_delete=models.SET_NULL)
 
     def train(self):
-        self.points += 5
+        if self.points-10 > 90:
+            self.points = 100
+        else:
+            self.points += 10

@@ -142,7 +142,6 @@ class WordDetailView(APIView):
 
 @api_view(["PUT"])
 def train_word(request, *args, **kwargs):
-
     word = Word.objects.get(
         is_visible=True, dictionary=kwargs['pk'], id=kwargs['word_id'])
 
@@ -163,7 +162,7 @@ def training(request, *args, **kwargs):
     for _ in range(4):
         random_int = random.randint(0, word_count)
         random_word = Word.objects.filter(
-            is_visible=True, dictionary=kwargs['pk']).all()[random_int]
+            is_visible=True, dictionary=kwargs['pk'], points__lt=100).all()[random_int]
         random_words.append(random_word)
 
     data = {}
